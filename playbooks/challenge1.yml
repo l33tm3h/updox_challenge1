@@ -1,0 +1,14 @@
+---
+- hosts: local #/etc/ansible/hosts.cfg
+  remote_user: ubuntuuser
+  tasks:
+    - name: install Filebeat
+      apt: name=filebeat update_cache=yes state=latest
+      become: yes
+      become_method: sudo
+    #- name: install ElasticSearch
+    #  apt: name=elasticsearch state=latest
+    #- name: install Kibana
+    #  apt: name=kibana
+
+  # handlers:
