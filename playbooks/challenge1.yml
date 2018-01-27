@@ -1,14 +1,30 @@
 ---
 - hosts: local #/etc/ansible/hosts.cfg
   remote_user: ubuntuuser
+  vars:
+    homeDir: ubuntuuser
   tasks:
-    - name: install Filebeat
-      apt: name=filebeat update_cache=yes state=latest
+    - name: Install ElasticSearch
+      apt: name=elasticsearch state=latest
       become: yes
       become_method: sudo
-    #- name: install ElasticSearch
-    #  apt: name=elasticsearch state=latest
-    #- name: install Kibana
-    #  apt: name=kibana
 
-  # handlers:
+    - name: Add Elastic to apt repository and update
+      become: yes
+      become_method: sudo
+      shell: |
+        wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
+        echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | tee /etc/apt/sources.list.d/elastic-6.x.list
+        apt update
+
+    - name: Install Filebeat
+      become: yes
+      become_method: sudo
+      command: apt install filebeat
+
+    # do some stuff here to update the filebeat config
+
+    - name: Install Kibana
+      become: yes
+      become_method: sudo
+      command: apt install kibana
