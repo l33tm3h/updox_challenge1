@@ -1,31 +1,37 @@
+# developer notes:
+#  if you run into problems with ES not starting due to java...
+#  https://discuss.elastic.co/t/elasticsearch-5-crash-java-security-policy/70525/7
+#
+# also nate, don't update network.host or http.port in /etc/elasticstack/elasticstack.yml
+# this causes ES not to work when run as localhost
 ---
 - hosts: local #/etc/ansible/hosts.cfg
   remote_user: ubuntuuser
   pre_tasks:
-    #
-    # Debian Tasks
-    #
     - name: Install ElasticSearch
       apt: name=elasticsearch state=latest
-      become: yes
+      become: true
       become_method: sudo
-      when: ansible_os_family == "Debian"
   roles:
       # Using forked, supports 6.x: https://github.com/andyshinn/ansible-filebeat.git
     - role: ansible-filebeat
-      become: yes
+      become: true
       become_method: sudo
-
-    # - name: Install Kibana
-    #   become: yes
-    #   become_method: sudo
-    #   command: apt install kibana
-    #   when: ansible_os_family == "Debian"
-
-    #
-    # OSX Tasks
-    #
-
-    #
-    # RHEL Tasks
-    #
+  tasks:
+    - name: Install Kibana
+      become: true
+      become_method: sudo
+      command: apt install kibana
+  post_tasks:
+    - name: Start ElasticSearch service
+      service:
+        name: elasticsearch
+        state: restarted
+      become: true
+      become_method: sudo
+    - name: Start Kibana service
+      service:
+        name: kibana
+        state: restarted
+      become: true
+      become_method: sudo
