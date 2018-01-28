@@ -1,0 +1,14 @@
+---
+- hosts: local
+  remote_user: ubuntuuser
+  tasks:
+    - service:
+        name: filebeat
+        state: started
+        # when: ansible_os_family == "Debian"
+
+    - service:
+        name: kibana
+        state: started
+        # when: ansible_os_family == "Debian"
+
