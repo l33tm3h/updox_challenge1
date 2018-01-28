@@ -1,5 +1,10 @@
 ---
 - hosts: local #/etc/ansible/hosts.cfg
+  roles:
+      # Using forked, supports 6.x: https://github.com/andyshinn/ansible-filebeat.git
+    - role: ansible-filebeat
+      become: yes
+      become_method: sudo
   remote_user: ubuntuuser
   tasks:
     #
@@ -9,22 +14,6 @@
       apt: name=elasticsearch state=latest
       become: yes
       become_method: sudo
-      when: ansible_os_family == "Debian"
-
-    - name: Add Elastic to apt repository and update
-      become: yes
-      become_method: sudo
-      shell: |
-        wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
-        echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | tee /etc/apt/sources.list.d/elastic-6.x.list
-        apt update
-      when: ansible_os_family == "Debian"
-
-    - name: Install Filebeat
-      become: yes
-      become_method: sudo
-      command: apt install filebeat
-    # do some stuff here to update the filebeat config
       when: ansible_os_family == "Debian"
 
     - name: Install Kibana
