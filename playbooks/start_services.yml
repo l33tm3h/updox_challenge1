@@ -3,10 +3,8 @@
   remote_user: ubuntuuser
   tasks:
     - service:
-        name: filebeat
+        name: elasticsearch
         state: started
-        # when: ansible_os_family == "Debian"
-
     - service:
         name: kibana
         state: started
