@@ -8,29 +8,20 @@ it would be used in a production environment.
 
 ## Setup
 ### OS
- * Environment: Ubuntu 16.04 build
+ * Environment: Ubuntu 16.04
  * Setup openSSH server
  * Don't forget to add authorized_keys: <http://docs.ansible.com/ansible/latest/intro_getting_started.html>
  * Setup sudo for user you will connect as: <http://mixeduperic.com/ubuntu/how-to-setup-a-user-or-group-with-sudo-privileges-on-ubuntu.html>
 
 ### Ansible
- * Install ansible: <http://docs.ansible.com/ansible/latest/intro_installation.html>
- * Follow instructions: <https://serversforhackers.com/c/an-ansible-tutorial>
+ * Follow instructions to install Ansible for Debian: <http://docs.ansible.com/ansible/latest/intro_installation.html#latest-releases-via-apt-debian>
+ * Update `/etc/ansible/hosts` with the following
 
-Our Ansible client is going to be the same as our Ansible server.  You'll need to update /etc/ansible/hosts with the following:
-  [local]
-  127.0.0.1
+> [local] 
 
-Updating Filebeat
+> 127.0.0.1
 
-Updating firewall settings
 
-### Running Ansible
-To validate your playbook is formatted correctly, use the `-C` flag:
-  `ansible-playbook -vvvv -C playbooks/install_software.yml --ask-become-pass`
-
-To setup the software using Ansible:
-  `ansible-playbook -vvvv playbooks/install_software.yml --ask-become-pass`
-
-To initiate the services we just installed:
-  `ansible-playbook -vvvv playbooks/start_services.yml --ask-become-pass`
+## Ansible - Installing ElasticSearch Software
+* To setup the software using Ansible:
+  `ansible-playbook playbooks/install_es_software.yml --ask-become-pass`
