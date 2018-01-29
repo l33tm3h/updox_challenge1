@@ -1,3 +1,0 @@
-[submodule "playbooks/roles/ansible-filebeat"]
-	path = playbooks/roles/ansible-filebeat
-	url = ../../DavidWittman/ansible-filebeat.git
