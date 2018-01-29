@@ -1,0 +1,65 @@
+# developer notes:
+#  if you run into problems with ES not starting due to java...
+#  https://discuss.elastic.co/t/elasticsearch-5-crash-java-security-policy/70525/7
+#
+---
+- hosts: local #/etc/ansible/hosts.cfg
+  remote_user: ubuntuuser
+  vars:
+    hostPort: 9200
+  pre_tasks:
+    - name: Install ElasticSearch
+      apt: name=elasticsearch state=latest
+      become: true
+      become_method: sudo
+
+    - name: Write ElasticSearch file
+      template:
+        src: elasticsearch.j2
+        dest: /etc/elasticsearch/elasticsearch.yml
+      become: true
+      become_method: sudo
+
+    - name: Start ElasticSearch service
+      service:
+        name: elasticsearch
+        state: restarted
+      become: true
+      become_method: sudo
+  roles:
+      # Using forked, supports 6.x: https://github.com/andyshinn/ansible-filebeat.git
+    - role: ansible-filebeat
+      become: true
+      become_method: sudo
+  tasks:
+    - name: Install Kibana
+      become: true
+      become_method: sudo
+      command: apt install kibana
+
+  post_tasks:
+    - name: Start Kibana service
+      service:
+        name: kibana
+        state: restarted
+      become: true
+      become_method: sudo
+
+    - name: Install gufw
+      apt: name=gufw state=latest
+      become: true
+      become_method: sudo
+
+    - name: Write ufw ipv4 rules for ES
+      template:
+        src: user.j2
+        dest: /etc/ufw/user.rules
+      become: true
+      become_method: sudo
+
+    - name: Write ufw ipv6 rules for ES
+      template:
+        src: user6.j2
+        dest: /etc/ufw/user6.rules
+      become: true
+      become_method: sudo
