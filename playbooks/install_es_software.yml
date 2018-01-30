@@ -6,14 +6,17 @@
 - hosts: local #/etc/ansible/hosts.cfg
   remote_user: ubuntuuser
   vars:
-    hostPort: 9200
+    esPort: 9200
+    kibanaPort: 5601
+    elasticUser: "dublinUpdoxCenter"
+    elasticPass: "LongPasswordWithNumbers1324!!"
   pre_tasks:
     - name: Install ElasticSearch
       apt: name=elasticsearch state=latest
       become: true
       become_method: sudo
 
-    - name: Write ElasticSearch file
+    - name: Write ElasticSearch config file
       template:
         src: elasticsearch.j2
         dest: /etc/elasticsearch/elasticsearch.yml
@@ -36,6 +39,13 @@
       become: true
       become_method: sudo
       command: apt install kibana
+
+    - name: Write Kibana config file
+      template:
+        src: kibana.j2
+        dest: /etc/kibana/kibana.yml
+      become: true
+      become_method: sudo
 
   post_tasks:
     - name: Start Kibana service
