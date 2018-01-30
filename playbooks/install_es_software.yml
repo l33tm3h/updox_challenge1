@@ -22,13 +22,20 @@
         dest: /etc/elasticsearch/elasticsearch.yml
       become: true
       become_method: sudo
+      notify:
+        - start elasticsearch
 
-    - name: Start ElasticSearch service
-      service:
-        name: elasticsearch
-        state: restarted
+    # - name: Start ElasticSearch service
+    #   service:
+    #     name: elasticsearch
+    #     state: restarted
+    #   become: true
+    #   become_method: sudo
+
+    - name: Register ElasticSearch as a service
       become: true
       become_method: sudo
+      command: systemctl enable elasticsearch.service
   roles:
       # Using forked, supports 6.x: https://github.com/andyshinn/ansible-filebeat.git
     - role: ansible-filebeat
@@ -46,6 +53,11 @@
         dest: /etc/kibana/kibana.yml
       become: true
       become_method: sudo
+
+    - name: Register Kibana as a service
+      become: true
+      become_method: sudo
+      command: systemctl enable kibana.service
 
   post_tasks:
     - name: Start Kibana service
